@@ -1,0 +1,67 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: washworld_flask
+    depends_on:
+      - mariadb
+    ports:
+      - "80:8080"
+    env_file:
+      - ./.env
+    networks:
+      - washworld-network
+
+  mariadb:
+    image: mariadb:latest
+    platform: ${DOCKER_PLATFORM}
+    container_name: washworld_mariadb
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - washworld-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: washworld_phpmyadmin
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_ARBITRARY: 1
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "8080:80"
+    networks:
+      - washworld-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        NEXT_PUBLIC_MAPBOX_TOKEN: ${NEXT_PUBLIC_MAPBOX_TOKEN}
+    container_name: washworld_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - washworld-network
+
+networks:
+  washworld-network:
+    name: washworld-network
+
+volumes:
+  mariadb_data:

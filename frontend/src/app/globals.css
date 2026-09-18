@@ -1,0 +1,607 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #06c167;
+  --color-secondary: #ff6b06;
+  --color-bg: #eef2f6;
+  --color-surface: #ececed;
+  --color-border: rgba(148, 163, 184, 0.25);
+  --color-header-primary: #06c167;
+  --color-header-secondary: #ff6b06;
+  --color-text: #333;
+  --color-text-muted: #94a3b8;
+
+  --color-official-primary: #06c167;
+  --color-official-secondary: #ff6b06;
+
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --font-gilroy:
+    "Gilroy", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+
+  --white-white: #f4f4f4;
+  --color-black: #000000;
+  --color-danger: #b91c1c;
+  --color-overlay-dark-40: rgba(0, 0, 0, 0.4);
+  --color-overlay-dark-45: rgba(0, 0, 0, 0.45);
+  --color-header-dark: #00130c;
+  --color-dashboard-gradient-start: #0ecc6d;
+  --color-dashboard-gradient-end: #000000;
+  --brand-green-01: #4cc36d;
+  --brand-green-02: #39c765;
+  --color-grey-01: #97999c;
+  --color-grey-02: #d9d9d9;
+  --color-grey-03: #eeeeee;
+  --color-grey-04: #f4f4f4;
+}
+
+[data-theme="dark"] {
+  --color-bg: #0f172a;
+  --color-surface: #111a2e;
+  --color-text: #e2e8f0;
+}
+
+/* ── Scrollbar hiding ── */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Explicitly target root scroll container */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-gilroy);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.app-shell {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-bg); /* desktop background fills the rest */
+}
+
+.app-screen {
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background:
+    linear-gradient(to right, #31854e 0%, rgba(0, 0, 0, 0) 60%),
+    linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
+    linear-gradient(
+      90deg,
+      var(--color-dashboard-gradient-start) 0%,
+      var(--color-dashboard-gradient-end) 100%
+    );
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/Gilroy-Heavy.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+}
+
+.washworld-map .mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
+.washworld-user-location-pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #3b82f6;
+  z-index: 1;
+  border: 2px solid #fff;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--color-header-primary) 28%, transparent),
+    0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.washworld-map .washworld-popup .mapboxgl-popup-content {
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+.washworld-map .washworld-popup .mapboxgl-popup-tip {
+  border-top-color: #fff;
+}
+
+.washworld-location-list-item {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.washworld-location-list-item .washworld-popup-card {
+  position: relative;
+  padding: 6px 8px 30px 8px;
+}
+
+.washworld-location-list-item .washworld-popup-title {
+  margin-left: 0;
+  padding-top: 4px;
+  font-size: 17px;
+}
+
+.washworld-location-list-item .washworld-popup-address {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+}
+
+.washworld-location-list-item .washworld-popup-footer {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.washworld-location-list-item .washworld-popup-hours {
+  margin-left: 0;
+  font-size: 14px;
+}
+
+.washworld-location-list-item .washworld-popup-more {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-left: 0;
+  height: 28px;
+  padding: 0 14px 0 22px;
+}
+
+.washworld-popup-card {
+  position: relative;
+  background: var(--color-surface);
+  color: #1f2937;
+  padding: 0px;
+}
+
+.washworld-popup-title {
+  margin-left: 10px;
+  padding-top: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.washworld-popup-distance {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.washworld-popup-address {
+  margin: 4px 10px 0 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #4b5563;
+}
+
+.washworld-popup-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.washworld-popup-hours {
+  margin-left: 10px;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.washworld-popup-hours-accent {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.washworld-popup-actions {
+  display: flex;
+  height: 36px;
+  align-items: stretch;
+  align-self: flex-end;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.washworld-popup-route {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 24px 0 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4b5563;
+  background: #fff;
+  border: none;
+  outline: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%);
+}
+
+.washworld-popup-more {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 16px 0 20px;
+  margin-left: -8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-primary);
+  white-space: nowrap;
+  clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.mapboxgl-popup-close-button {
+  display: none;
+}
+
+@keyframes notification-bell-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+  }
+
+  10% {
+    transform: translateX(-4px) rotate(-28deg) scale(1.06);
+  }
+
+  20% {
+    transform: translateX(4px) rotate(28deg) scale(1.06);
+  }
+
+  30% {
+    transform: translateX(-3px) rotate(-22deg) scale(1.04);
+  }
+
+  40% {
+    transform: translateX(3px) rotate(22deg) scale(1.04);
+  }
+
+  50% {
+    transform: translateX(-2px) rotate(-14deg) scale(1.02);
+  }
+
+  60% {
+    transform: translateX(2px) rotate(14deg) scale(1.02);
+  }
+
+  70% {
+    transform: translateX(-1px) rotate(-8deg);
+  }
+
+  80% {
+    transform: translateX(1px) rotate(8deg);
+  }
+}
+
+@keyframes notification-bell-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(255, 230, 109, 0.18),
+      0 8px 18px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(255, 230, 109, 0),
+      0 0 18px rgba(255, 230, 109, 0.42),
+      0 8px 18px rgba(0, 0, 0, 0.22);
+    background: rgba(255, 230, 109, 0.18);
+  }
+}
+
+@keyframes notification-bell-dot-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 230, 109, 0.5);
+  }
+
+  50% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 5px rgba(255, 230, 109, 0);
+  }
+}
+
+.notification-bell-active {
+  animation: notification-bell-glow 1.8s ease-in-out infinite;
+}
+
+.notification-bell-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: notification-bell-shake 10s ease-in-out infinite;
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.notification-bell-dot {
+  animation: notification-bell-dot-pulse 1.8s ease-in-out infinite;
+}
+
+.carousel-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-x;
+}
+
+.carousel-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes payment-reveal {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  to {
+    max-height: 32rem;
+    opacity: 1;
+  }
+}
+
+.payment-reveal {
+  overflow: hidden;
+  animation: payment-reveal 260ms ease-out;
+}
+
+@keyframes scanning-dot {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translateY(-0.08em);
+  }
+}
+
+.scanning-dot {
+  display: inline-block;
+  min-width: 0.2em;
+  opacity: 0.2;
+  animation: scanning-dot 900ms ease-in-out infinite;
+}
+
+.scanning-dot:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.scanning-dot:nth-child(2) {
+  animation-delay: 300ms;
+}
+
+.scanning-dot:nth-child(3) {
+  animation-delay: 600ms;
+}
+
+@keyframes driving-car-bob {
+  0%,
+  100% {
+    transform: translateX(-8px) translateY(0);
+  }
+
+  50% {
+    transform: translateX(8px) translateY(-4px);
+  }
+}
+
+@keyframes driving-car-shadow {
+  0%,
+  100% {
+    transform: translateX(-18px) scaleX(0.92);
+    opacity: 0.22;
+  }
+
+  50% {
+    transform: translateX(18px) scaleX(1.02);
+    opacity: 0.32;
+  }
+}
+
+.driving-scene {
+  isolation: isolate;
+}
+
+.driving-car-wrap {
+  animation: driving-car-bob 1.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.driving-car-shadow {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(0, 0, 0, 0.18) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  animation: driving-car-shadow 1.5s ease-in-out infinite;
+}
+
+.driving-car-image {
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.22));
+}
+
+@keyframes wash-advice-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes wash-advice-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wash-advice-backdrop {
+  animation: wash-advice-backdrop-in 0.25s ease;
+}
+
+.wash-advice-card {
+  animation: wash-advice-card-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.profile-update-toast {
+  opacity: 0;
+  transform: translateX(42px);
+  transition:
+    transform 0.34s ease,
+    opacity 0.34s ease;
+  will-change: transform, opacity;
+}
+
+.profile-update-toast-enter {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.profile-update-toast-exit {
+  opacity: 0;
+  transform: translateX(42px);
+}
+
+/* ── Plan carousel slide animations (bruges af subscriptions/page.tsx og singlewash/page.tsx) ── */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(100%) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-100%) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+.slide-right { animation: slideInRight 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+.slide-left  { animation: slideInLeft  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+
+/* ── CompletionModal animations (bruges af activewash/CompletionModal.tsx) ── */
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.88); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes dropFloat {
+  0%,100% { transform: translateY(0px) rotate(180deg); }
+  50%     { transform: translateY(-6px) rotate(180deg); }
+}
+@keyframes bubbleFloat {
+  0%,100% { transform: scale(1);    opacity: 0.5;  }
+  50%     { transform: scale(1.08); opacity: 0.75; }
+}
+@keyframes sparkPop {
+  0%,100% { transform: scale(0.7); opacity: 0.4; }
+  50%     { transform: scale(1.1); opacity: 1;   }
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+  background: transparent;
+}

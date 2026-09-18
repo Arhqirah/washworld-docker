@@ -1,0 +1,44 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: washworld_flask
+    depends_on:
+      - mariadb
+    ports:
+      - 80:8080
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+  mariadb:
+    image: mariadb:latest
+    platform: ${DOCKER_PLATFORM}
+    container_name: washworld_mariadb
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: washworld_phpmyadmin
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_ARBITRARY: 1
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 8080:80
+
+volumes:
+  mariadb_data:
