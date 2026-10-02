@@ -72,6 +72,12 @@ docker compose down -v
 - Port 80 (backend) and port 8080 (phpMyAdmin) are easy to mix up — the backend's Flask app listens on container port 8080 internally, but is mapped to **host port 80**. phpMyAdmin is the one mapped to host port 8080.
 - MariaDB's host port is mapped to **3308** (not the default 3306), since a locally installed MySQL Server or another MariaDB container can easily already be using 3306 on your machine. This only affects connecting to the database directly from your host (e.g. a desktop DB client) — the app itself always talks to MariaDB internally over `washworld-network` at `mariadb:3306`, regardless of this mapping. If you hit a "port already in use" error when starting the stack, something else on your machine is bound to that port — on Windows you can find it with `netstat -ano | findstr :<port>` followed by `tasklist /FI "PID eq <pid>"`.
 
+## Image builds and resource limits
+
+- **Both `frontend` and `backend` use multi-stage Dockerfiles.** The frontend builds in a `deps` → `builder` → `runner` pipeline; the backend builds dependencies in a `builder` stage and copies only the installed packages into a clean runtime stage, leaving build tools out of the final image.
+- **Neither app container runs as root.** The frontend runs as `nextjs` (UID 1001); the backend creates and runs as a dedicated `appuser`.
+- **Every service has a memory and CPU limit** set directly in `docker-compose.yml` (`mem_limit` / `cpus`): 512MB / 0.5 CPU for `backend`, `mariadb`, and `frontend`, and 256MB / 0.25 CPU for the lighter `phpmyadmin`. A snapshot with `docker stats --no-stream` while the stack is idle shows every container comfortably under its limit (MariaDB is the heaviest at around 20% of its memory allowance).
+
 ## What was tested
 
 This setup was verified end-to-end, not just assumed to work from the compose file:
@@ -80,6 +86,7 @@ This setup was verified end-to-end, not just assumed to work from the compose fi
 - **Named network connectivity** — confirmed all four containers share `washworld-network`, resolve each other by hostname, and the backend can open a real TCP connection to MariaDB on port 3306.
 - **Reproducibility** — cloned the repo into a completely separate folder, built a fresh `.env` from `.env.example` only, and confirmed `docker compose up --build` works from a clean checkout with no leftover state.
 - **End-to-end smoke test** — registered a user through the actual frontend UI and confirmed the request reaches the backend and database successfully (this caught and fixed a CORS bug caused by `NEXT_PUBLIC_API_BASE_URL` initially pointing at the wrong port).
+- **Resource limits** — confirmed with `docker stats --no-stream` that all four containers run well within their configured memory/CPU limits under normal load.
 
 ## Tech stack
 
