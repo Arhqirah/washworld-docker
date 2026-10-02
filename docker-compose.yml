@@ -12,6 +12,8 @@ services:
       - ./.env
     networks:
       - washworld-network
+    cpus: "0.5"
+    mem_limit: "512m"
 
   mariadb:
     image: mariadb:latest
@@ -26,9 +28,11 @@ services:
       - mariadb_data:/var/lib/mysql
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3306:3306"
+      - "3308:3306"
     networks:
       - washworld-network
+    cpus: "0.5"
+    mem_limit: "512m"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -43,6 +47,8 @@ services:
       - "8080:80"
     networks:
       - washworld-network
+    cpus: "0.25"
+    mem_limit: "256m"
 
   frontend:
     build:
@@ -58,6 +64,8 @@ services:
       - "3000:3000"
     networks:
       - washworld-network
+    cpus: "0.5"
+    mem_limit: "512m"
 
 networks:
   washworld-network:
